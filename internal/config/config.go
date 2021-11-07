@@ -4,7 +4,7 @@ import (
 	"errors"
 	"os"
 
-	"emailservice/pkg/logger"
+	"github.com/bigmate/notification/pkg/logger"
 
 	"github.com/joho/godotenv"
 	"gopkg.in/yaml.v3"
@@ -17,14 +17,12 @@ type Config struct {
 		Level string `yaml:"level"`
 	}
 	Smtp struct {
-		Host     string `yaml:"host"`
-		Port     int    `yaml:"port"`
-		Username string `yaml:"username"`
-		Password string `yaml:"password"`
-	} `yaml:"smtp"`
-	Email struct {
+		Host      string `yaml:"host"`
+		Port      int    `yaml:"port"`
+		Username  string `yaml:"username"`
+		Password  string `yaml:"password"`
 		SecretKey string `yaml:"secretKey"`
-	}
+	} `yaml:"smtp"`
 }
 
 //NewConfig loads the config file
