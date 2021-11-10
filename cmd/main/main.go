@@ -2,13 +2,13 @@ package main
 
 import (
 	"context"
-	"emailservice/internal/pkg"
 
-	"emailservice/pkg/logger"
 	"os/signal"
 	"sync"
 	"syscall"
 
+	"github.com/bigmate/notification/internal/pkg"
+	"github.com/bigmate/notification/pkg/logger"
 	"github.com/hashicorp/go-multierror"
 )
 

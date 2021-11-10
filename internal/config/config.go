@@ -22,6 +22,7 @@ type Config struct {
 		Username  string `yaml:"username"`
 		Password  string `yaml:"password"`
 		SecretKey string `yaml:"secretKey"`
+		Sender    string `yaml:"sender"`
 	} `yaml:"smtp"`
 }
 

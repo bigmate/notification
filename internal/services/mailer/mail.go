@@ -4,6 +4,10 @@ import (
 	"context"
 	"io"
 	"time"
+
+	"github.com/bigmate/notification/internal/config"
+	"github.com/bigmate/notification/pkg/logger"
+	mail "github.com/xhit/go-simple-mail/v2"
 )
 
 //Mailer is general purpose mailer service
@@ -70,17 +74,25 @@ func WithTemplate(template io.Reader) Option {
 type mailer struct {
 	sender                string
 	host                  string
-	port                  string
+	port                  int
 	username              string
 	password              string
-	encryption            int
-	keepAlive             bool
+	encryption            mail.Encryption
 	defaultConnectTimeout time.Duration
 	defaultSendTimeout    time.Duration
 }
 
-func NewMailer() Mailer {
-	return nil
+func NewMailer(config *config.Config) Mailer {
+	return &mailer{
+		sender:                config.Smtp.Sender,
+		host:                  config.Smtp.Host,
+		port:                  config.Smtp.Port,
+		username:              config.Smtp.Username,
+		password:              config.Smtp.Password,
+		defaultConnectTimeout: time.Minute,
+		defaultSendTimeout:    time.Minute * 5,
+		encryption:            mail.EncryptionSTARTTLS,
+	}
 }
 
 func (m *mailer) Send(ctx context.Context, options ...Option) error {
@@ -100,6 +112,40 @@ func (m *mailer) Send(ctx context.Context, options ...Option) error {
 
 	if p.receiver == "" {
 		panic("receiver is not set")
+	}
+
+	server := mail.NewSMTPClient()
+	server.Host = m.host
+	server.Port = m.port
+	server.Username = m.username
+	server.Password = m.password
+	server.Encryption = m.encryption
+	server.KeepAlive = false
+	server.ConnectTimeout = p.connectTimeout
+	server.SendTimeout = p.sendTimeout
+
+	smtpClient, err := server.Connect()
+	if err != nil {
+		logger.Error(err)
+		return err
+	}
+
+	email := mail.NewMSG()
+	email.SetFrom(p.sender).AddTo(p.receiver).
+		SetSubject(p.subject)
+
+	emailBytes, err := io.ReadAll(p.template)
+	if err != nil {
+		logger.Error(err)
+		return err
+	}
+
+	email.SetBody(mail.TextHTML, string(emailBytes))
+
+	err = email.Send(smtpClient)
+	if err != nil {
+		logger.Error(err)
+		return err
 	}
 
 	return nil
