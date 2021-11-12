@@ -6,8 +6,8 @@ import (
 	"html/template"
 	"io"
 
+	"github.com/bigmate/idm/pkg/logger"
 	"github.com/bigmate/notification/internal/models"
-	"github.com/bigmate/notification/pkg/logger"
 )
 
 //go:embed templates
@@ -30,7 +30,7 @@ func NewTemplateFactory() (TemplateFactory, error) {
 	return &tmplFactory{tmpl: tmpl}, nil
 }
 
-//Password reset is the function that resets the password
+//PasswordReset is the function that resets the password
 func (t *tmplFactory) PasswordReset(data models.PasswordReset) (io.Reader, error) {
 	buf := &bytes.Buffer{}
 	if err := t.tmpl.ExecuteTemplate(buf, "password-reset", data); err != nil {

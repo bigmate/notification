@@ -3,13 +3,13 @@ package background
 import (
 	"context"
 
-	"github.com/bigmate/notification/internal/pkg"
-	"github.com/bigmate/notification/pkg/logger"
+	"github.com/bigmate/idm/pkg/app"
+	"github.com/bigmate/idm/pkg/logger"
 )
 
 //Service is the background service interface
 type Service interface {
-	pkg.App
+	app.App
 	Schedule(job Job)
 }
 

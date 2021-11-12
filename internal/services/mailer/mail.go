@@ -1,12 +1,13 @@
 package mailer
 
 import (
+	"bytes"
 	"context"
 	"io"
 	"time"
 
+	"github.com/bigmate/idm/pkg/logger"
 	"github.com/bigmate/notification/internal/config"
-	"github.com/bigmate/notification/pkg/logger"
 	mail "github.com/xhit/go-simple-mail/v2"
 )
 
@@ -95,19 +96,16 @@ func NewMailer(config *config.Config) Mailer {
 	}
 }
 
-func (m *mailer) Send(ctx context.Context, options ...Option) error {
+func (m *mailer) Send(_ context.Context, options ...Option) error {
 	p := &parameters{
 		sender:         m.sender,
 		connectTimeout: m.defaultConnectTimeout,
 		sendTimeout:    m.defaultSendTimeout,
+		template:       &bytes.Buffer{},
 	}
 
 	for _, option := range options {
 		option(p)
-	}
-
-	if p.template == nil {
-		panic("template is not set")
 	}
 
 	if p.receiver == "" {
@@ -126,21 +124,22 @@ func (m *mailer) Send(ctx context.Context, options ...Option) error {
 
 	smtpClient, err := server.Connect()
 	if err != nil {
-		logger.Error(err)
+		logger.Errorf("mailer: failed to connect: %v", err)
 		return err
 	}
 
 	email := mail.NewMSG()
-	email.SetFrom(p.sender).AddTo(p.receiver).
-		SetSubject(p.subject)
+	email = email.SetFrom(p.sender)
+	email = email.AddTo(p.receiver)
+	email = email.SetSubject(p.subject)
 
 	emailBytes, err := io.ReadAll(p.template)
 	if err != nil {
-		logger.Error(err)
+		logger.Errorf("mailer: failed to read template: %v", err)
 		return err
 	}
 
-	email.SetBody(mail.TextHTML, string(emailBytes))
+	email.SetBodyData(mail.TextHTML, emailBytes)
 
 	err = email.Send(smtpClient)
 	if err != nil {

@@ -4,8 +4,6 @@ import (
 	"errors"
 	"os"
 
-	"github.com/bigmate/notification/pkg/logger"
-
 	"github.com/joho/godotenv"
 	"gopkg.in/yaml.v3"
 )
@@ -30,11 +28,12 @@ type Config struct {
 func NewConfig() (*Config, error) {
 	err := godotenv.Load(".env")
 	if err != nil {
-		logger.Fatal(err)
+		return nil, err
 	}
-	confPath := os.Getenv("EMAIL_CONFIG")
+
+	confPath := os.Getenv("NOTIFICATION_CONFIG")
 	if confPath == "" {
-		return nil, errors.New("EMAIL_CONFIG env variable is not set")
+		return nil, errors.New("config: NOTIFICATION_CONFIG env variable is not set")
 	}
 
 	conf := &Config{}
