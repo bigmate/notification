@@ -1,0 +1,23 @@
+{{define "body"}}
+    <!doctype html>
+    <html>
+        <head>
+            <meta name="viewport" content="width=device-width"/>
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF=8" />
+        </head>
+
+        <body>
+            <p>Welcome to GO Classfieds</p>
+            <p>Click below to get a link to activate your account</p>
+            <p><a href="{{.Link}}">{{.Link}}</a></p>
+            <br>
+            <p>This link expires in 20 minutes.</p>
+            <p>Please enter this code to activate your account</p>
+            <p>{{.code}}</p>
+            <br>  
+            <p>-----------------
+            GO Classifieds 2021
+            </p>
+        </body>
+    </html>
+{{end}}

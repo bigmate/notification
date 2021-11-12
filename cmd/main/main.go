@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/bigmate/notification/internal/pkg"
+	"github.com/bigmate/notification/internal/services/background"
 	"github.com/bigmate/notification/pkg/logger"
 	"github.com/hashicorp/go-multierror"
 )
@@ -47,11 +48,13 @@ func run(ctx context.Context, apps ...pkg.App) error {
 }
 
 func initApps(ctx context.Context) ([]pkg.App, error) {
-	//	conf, err := config.NewConfig()
+	// conf, err := config.NewConfig()
 	// if err != nil {
-	//	return nil, err
-	//	}
+	// 	return nil, err
+	// }
+	jobService := background.NewService()
+	//mailService := mailer.NewMailer(conf)
 	logger.Info("config successfully initialized")
 
-	return []pkg.App{}, nil
+	return []pkg.App{jobService}, nil
 }

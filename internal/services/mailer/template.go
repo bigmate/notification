@@ -15,6 +15,7 @@ var f embed.FS
 
 type TemplateFactory interface {
 	PasswordReset(data models.PasswordReset) (io.Reader, error)
+	Signup(data models.Signup) (io.Reader, error)
 }
 
 type tmplFactory struct {
@@ -29,10 +30,21 @@ func NewTemplateFactory() (TemplateFactory, error) {
 	return &tmplFactory{tmpl: tmpl}, nil
 }
 
+//Password reset is the function that resets the password
 func (t *tmplFactory) PasswordReset(data models.PasswordReset) (io.Reader, error) {
 	buf := &bytes.Buffer{}
 	if err := t.tmpl.ExecuteTemplate(buf, "password-reset", data); err != nil {
-		logger.Errorf("mailer: failed to construct")
+		logger.Errorf("mailer: failed to construct %v", err)
+		return nil, err
+	}
+	return buf, nil
+}
+
+//Signup is the function that sends the signup welcome email
+func (t *tmplFactory) Signup(data models.Signup) (io.Reader, error) {
+	buf := &bytes.Buffer{}
+	if err := t.tmpl.ExecuteTemplate(buf, "signup", data); err != nil {
+		logger.Errorf("mailer: failed to construct template: %v", err)
 		return nil, err
 	}
 	return buf, nil
