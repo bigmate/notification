@@ -24,7 +24,7 @@ type service struct {
 
 func NewService(mail mailer.Mailer, bg background.Service) (app.App, error) {
 	conf := sarama.NewConfig()
-	consumer, err := sarama.NewConsumer([]string{""}, conf)
+	consumer, err := sarama.NewConsumer([]string{"localhost:9092"}, conf)
 	if err != nil {
 		return nil, err
 	}

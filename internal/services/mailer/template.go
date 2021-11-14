@@ -23,7 +23,7 @@ type tmplFactory struct {
 }
 
 func NewTemplateFactory() (TemplateFactory, error) {
-	tmpl, err := template.ParseFS(f)
+	tmpl, err := template.ParseFS(f, "templates/*.tmpl")
 	if err != nil {
 		return nil, err
 	}
