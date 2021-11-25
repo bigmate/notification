@@ -22,6 +22,12 @@ type Config struct {
 		SecretKey string `yaml:"secretKey"`
 		Sender    string `yaml:"sender"`
 	} `yaml:"smtp"`
+	RabbitMQ struct {
+		Port     string `yaml:"port"`
+		User     string `yaml:"user"`
+		Password string `yaml:"password"`
+		DSN      string `yaml:"dsn"`
+	}
 }
 
 //NewConfig loads the config file

@@ -27,7 +27,6 @@ func NewService() Service {
 //Schedule schedules a job
 func (s *service) Schedule(job Job) {
 	go func() {
-		//TODO: add tracing
 		logger.Infof("starting job %s", job.Name())
 		defer logger.Infof("finished %s", job.Name())
 

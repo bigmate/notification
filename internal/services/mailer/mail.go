@@ -79,6 +79,7 @@ type mailer struct {
 	username              string
 	password              string
 	encryption            mail.Encryption
+	keepalive             bool
 	defaultConnectTimeout time.Duration
 	defaultSendTimeout    time.Duration
 }
@@ -90,9 +91,10 @@ func NewMailer(config *config.Config) Mailer {
 		port:                  config.Smtp.Port,
 		username:              config.Smtp.Username,
 		password:              config.Smtp.Password,
+		encryption:            mail.EncryptionSTARTTLS,
 		defaultConnectTimeout: time.Minute,
 		defaultSendTimeout:    time.Minute * 5,
-		encryption:            mail.EncryptionSTARTTLS,
+		keepalive:             false,
 	}
 }
 

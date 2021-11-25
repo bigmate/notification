@@ -33,7 +33,7 @@ func NewTemplateFactory() (TemplateFactory, error) {
 //PasswordReset is the function that resets the password
 func (t *tmplFactory) PasswordReset(data models.PasswordReset) (io.Reader, error) {
 	buf := &bytes.Buffer{}
-	if err := t.tmpl.ExecuteTemplate(buf, "password-reset", data); err != nil {
+	if err := t.tmpl.ExecuteTemplate(buf, "password-reset.tmpl", data); err != nil {
 		logger.Errorf("mailer: failed to construct %v", err)
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func (t *tmplFactory) PasswordReset(data models.PasswordReset) (io.Reader, error
 //Signup is the function that sends the signup welcome email
 func (t *tmplFactory) Signup(data models.Signup) (io.Reader, error) {
 	buf := &bytes.Buffer{}
-	if err := t.tmpl.ExecuteTemplate(buf, "signup", data); err != nil {
+	if err := t.tmpl.ExecuteTemplate(buf, "signup.tmpl", data); err != nil {
 		logger.Errorf("mailer: failed to construct template: %v", err)
 		return nil, err
 	}

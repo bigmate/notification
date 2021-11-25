@@ -40,7 +40,7 @@ func initApps() ([]app.App, error) {
 
 	bgScheduler := background.NewService()
 	mailService := mailer.NewMailer(conf)
-	kafkaService, err := kafka.NewService(mailService, bgScheduler)
+	kService, err := kafka.NewService(mailService, bgScheduler)
 
 	if err != nil {
 		return nil, err
@@ -48,5 +48,5 @@ func initApps() ([]app.App, error) {
 
 	logger.Info("kafka successfully initialized")
 
-	return []app.App{bgScheduler, kafkaService}, nil
+	return []app.App{bgScheduler, kService}, nil
 }
